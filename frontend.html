@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot O.A.S.I.S</title>
+<!--
+            ('-. .-.   ('-.     .-') _  .-. .-')                .-') _    
+           ( OO )  /  ( OO ).-.(  OO) ) \  ( OO )              (  OO) )   
+   .-----. ,--. ,--.  / . --. //     '._ ;-----.\  .-'),-----. /     '._  
+  '  .--./ |  | |  |  | \-.  \ |'--...__)| .-.  | ( OO'  .-.  '|'--...__) 
+  |  |('-. |   .|  |.-'-'  |  |'--.  .--'| '-' /_)/   |  | |  |'--.  .--' 
+ /_) |OO  )|       | \| |_.'  |   |  |   | .-. `. \_) |  |\|  |   |  |    
+ ||  |`-'| |  .-.  |  |  .-.  |   |  |   | |  \  |  \ |  | |  |   |  |    
+(_'  '--'\ |  | |  |  |  | |  |   |  |   | '--'  /   `'  '-'  '   |  |    
+   `-----' `--' `--'  `--' `--'   `--'   `------'      `-----'    `--'    
+-->
+<!-- *** ChaTTY Bot *** 
+
+    GNU GENERAL PUBLIC LICENSE
+    Version 3, 29 juin 2007
+
+    Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+    Tout droit réservé.
+
+    Vous pouvez redistribuer ce logiciel sous certaines conditions ; 
+    voir la licence GNU General Public License pour plus de détails.
+
+    Ce logiciel est distribué dans l'espoir qu'il sera utile, 
+    mais SANS AUCUNE GARANTIE ; sans même la garantie implicite 
+    de COMMERCIALISATION ou d'ADAPTATION À UN USAGE PARTICULIER. 
+    Voir la licence GNU General Public License pour plus de détails.
+
+    Vous devriez avoir reçu une copie de la licence GNU General Public License 
+    avec ce logiciel. Si ce n'est pas le cas, consultez <https://www.gnu.org/licenses/>.
+
+    Le wallpaper n'est pas inclus dans la licence, il est utilisé sous copyright donc il faut l'accord du créateur ou
+    mettre le votre.
+
+    source : https://www.heroscreen.cc/2024/06/futuristic-robot-army-wallpaper-dark.html
+-->
+<style>
+/* Animation hueShift */
+@keyframes hueShift {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        filter: hue-rotate(180deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+body::before {
+    content: "";
+    animation: hueShift 30s infinite;
+    pointer-events: none;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #eadfdf;
+    background-color: #121212;
+    overflow: hidden;
+    animation: hueShift 30s infinite;
+}
+main {
+    background: url('./droid-army-retail.jpg') no-repeat center center fixed;
+    background-size: cover;
+    padding: 20px;
+    min-height: 100vh;
+    color: #eadfdf;
+    animation: hueShift 30s infinite;
+}
+#chatbot-container {
+    position: fixed;
+    bottom: 115px;
+    right: 20px;
+    width: 320px;
+    height: 500px;
+    border: 2px solid #444;
+    border-radius: 10px;
+    background-color: #333;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+    z-index: 99;
+    animation: hueShift 30s infinite;
+}
+#chatbot-header {
+    background-color: #151314;
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-shadow: 0 0 5px #00ffcc;
+    animation: hueShift 30s infinite;
+}
+#chatbot-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #222;
+    border-bottom: 2px solid #444;
+    color: #e0e0e0;
+    animation: hueShift 30s infinite;
+}
+.chatbot-message {
+    margin-bottom: 15px;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    background: linear-gradient(145deg, #444, #222);
+    color: #e0e0e0;
+    animation: hueShift 30s infinite;
+}
+.chatbot-user {
+    background-color: #D71A1A;
+    color: white;
+    align-self: flex-end;
+    text-shadow: 0 0 5px #020202;
+    animation: hueShift 30s infinite;
+}
+.chatbot-bot {
+    background-color: #444;
+    color: white;
+    align-self: flex-start;
+    text-shadow: 0 0 5px #00ffff;
+    animation: hueShift 30s infinite;
+}
+#chatbot-input {
+    border: none;
+    padding: 15px;
+    width: calc(100% - 30px);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    outline: none;
+    background-color: #222;
+    color: white;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.6);
+    animation: hueShift 30s infinite;
+}
+#chatbot-button {
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+    background-color: #332528;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    z-index: 99;
+    text-shadow: 0 0 5px #070507;
+    animation: hueShift 30s infinite;
+}
+#terminal-modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    animation: hueShift 30s infinite;
+}
+#terminal-container {
+    background-color: #333;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+    width: 80%;
+    max-width: 800px;
+    height: 70%;
+    min-height: 70%;
+    max-height: 70%;
+    padding: 20px;
+    color: #00ffcc;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    animation: hueShift 30s infinite;
+}
+#terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: hueShift 30s infinite;
+}
+#close-btn {
+    background: none;
+    border: none;
+    color: #00ffcc;
+    font-size: 24px;
+    cursor: pointer;
+    padding-bottom: 20px;
+    animation: hueShift 30s infinite;
+}
+#terminal-output {
+    flex: 1;
+    background-color: #222;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+    height: 480px;
+    max-height: calc(100% - 30px);
+    width: 735px;
+    animation: hueShift 30s infinite;
+}
+#terminal-input {
+    border: none;
+    padding: 10px;
+    width: calc(100% - 47px);
+    border-radius: 5px;
+    background-color: #444;
+    color: #00ffcc;
+    position: absolute;
+    bottom: 20px;
+    box-sizing: border-box;
+    outline: none;
+    animation: hueShift 30s infinite;
+}
+#terminal-output::-webkit-scrollbar {
+    width: 5px;
+}
+#terminal-output::-webkit-scrollbar-thumb {
+    background-color: #00ffcc;
+    border-radius: 5px;
+}
+#terminal-output::-webkit-scrollbar-track {
+    background: #222;
+}
+/* Style amélioré pour le formulaire */
+#new-response-form {
+    position: fixed;
+    bottom: 70px;
+    left: 20px;
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    display: none;
+    width: 300px;
+    color: white;
+    animation: hueShift 30s infinite;
+}
+#new-response-form h2 {
+    margin-top: 0;
+    font-size: 1.2em;
+    text-align: center;
+    color: #fff;
+    animation: hueShift 30s infinite;
+}
+#new-response-form textarea {
+    height: 180px;
+    animation: hueShift 30s infinite;
+}
+#new-response-form input,
+#new-response-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background: #444;
+    color: #fff;
+    animation: hueShift 30s infinite;
+}
+#new-response-form input:focus,
+#new-response-form textarea:focus {
+    outline: none;
+    background: #555;
+    animation: hueShift 30s infinite;
+}
+#new-response-form button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 5px;
+    background: #0066cc;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    animation: hueShift 30s infinite;
+}
+#new-response-form button:hover {
+    background: #0055a5;
+    animation: hueShift 30s infinite;
+}
+#new-response-form button:active {
+    background: #004080;
+    animation: hueShift 30s infinite;
+}
+</style>
+</head>
+<body>
+    <main>
+        <button id="chatbot-button">&#x1F4AC;</button>
+        <div id="chatbot-container">
+            <div id="chatbot-header">
+                Chatbot O.A.S.I.S
+                <span style="cursor:pointer;" onclick="document.getElementById('chatbot-container').style.display='none'">&#129441;</span>
+            </div>
+            <div id="chatbot-messages"></div>
+            <input type="text" id="chatbot-input" placeholder="Tapez votre message ici...">
+        </div>
+
+        <div id="terminal-modal">
+            <div id="terminal-container">
+                <div id="terminal-header">
+                    <h2>Terminal O.A.S.I.S</h2>
+                    <button id="close-btn" onclick="document.getElementById('terminal-modal').style.display='none'">&#128268;</button>
+                </div>
+                <form id="terminal-form" method="post">
+                    <div id="terminal-output"></div>
+                    <input type="text" id="terminal-input" name="command" placeholder="Entrez votre commande...">
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Formulaire d'ajout de réponses -->
+    <div id="new-response-form">
+        <h2>Ajouter une réponse</h2>
+        <input type="text" id="new-question" placeholder="Question">
+        <textarea id="new-response" placeholder="Réponse"></textarea>
+        <button onclick="addNewResponse()">Ajouter</button>
+        <button onclick="closeForm()">Fermer</button>
+    </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const chatbotButton = document.getElementById("chatbot-button");
+    const chatbotContainer = document.getElementById("chatbot-container");
+    const chatbotMessages = document.getElementById("chatbot-messages");
+    const chatbotInput = document.getElementById("chatbot-input");
+    const terminalModal = document.getElementById('terminal-modal');
+    const terminalInput = document.getElementById('terminal-input');
+    const terminalOutput = document.getElementById('terminal-output');
+    const terminalForm = document.getElementById('terminal-form');
+
+    // Tableau pour stocker l'historique des commandes
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    const actions = {
+        "heure": displayCurrentTime,
+        "date": displayCurrentDate,
+        "clear": clearMessages,
+        "stop": stopSpeech,
+        "terminal": () => terminalModal.style.display = 'flex',
+        "google": () => window.open("https://www.google.com", "_blank"),
+        "bing": () => window.open("https://www.bing.com", "_blank"),
+        "wikipedia": () => window.open("https://fr.wikipedia.org/wiki/Wikipédia", "_blank"),
+        "projets raspberry": () => window.open("https://projects.raspberrypi.org/fr-FR", "_blank"),
+        "kubii": () => window.open("https://www.kubii.com/fr/", "_blank"),
+        "boot": () => window.open("http://127.0.0.1:8000/system-UIX/boot.html", "_blank"),
+        "meteo": () => window.open("https://wttr.in/digoin", "_blank"),
+        "metar": () => window.open("https://www.meteoblue.com/fr/meteo/cartes/widget/paris-12_france_6618618", "_blank")
+    };
+
+    chatbotButton.addEventListener("click", function() {
+        chatbotContainer.style.display = chatbotContainer.style.display === "flex" ? "none" : "flex";
+    });
+
+chatbotInput.addEventListener("keypress", function(e) {
+    if (e.key === "Enter" && chatbotInput.value.trim() !== "") {
+        const userInput = chatbotInput.value.trim().toLowerCase();
+        const keywords = ["cherche ", "recherche "]; // mots-clés désirés pour 
+        let foundKeyword = false;
+        
+        keywords.forEach(keyword => {
+            if (userInput.startsWith(keyword)) {
+                const searchQuery = userInput.substring(keyword.length).trim();
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`, "_blank");
+                foundKeyword = true;
+            }
+        });
+
+        if (foundKeyword) {
+            chatbotInput.value = "";
+            return;
+        }
+
+        let actionFound = false;
+        for (let key in actions) {
+            if (userInput.includes(key)) {
+                actions[key]();
+                actionFound = true;
+                break;
+            }
+        }
+
+        if (!actionFound) {
+            sendMessage(chatbotInput.value);
+        }
+        chatbotInput.value = "";
+    }
+});
+
+    function sendMessage(message) {
+        appendMessage("user", message);
+        fetch("backend.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            appendMessage("bot", data.response);
+            if (!data.recognized) {
+                showForm(message);
+            }
+            speak(data.response);  // Lire toutes les réponses à haute voix
+        })
+        .catch(error => console.error("Erreur :", error));
+    }
+
+    function appendMessage(sender, message) {
+        const messageElement = document.createElement("div");
+        messageElement.className = `chatbot-message chatbot-${sender}`;
+    
+        // Remplacer les \n par des <br>
+        const formattedMessage = message.replace(/\n/g, '<br>');
+        messageElement.innerHTML = formattedMessage;
+    
+        chatbotMessages.appendChild(messageElement);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    /* si besoin commenter ici pour ne pas afficher le formulaire d'ajout de réponses */
+    function showForm(question) {
+        document.getElementById("new-response-form").style.display = "block";
+        document.getElementById("new-question").value = question;
+    }
+
+    window.addNewResponse = function() {
+        const question = document.getElementById("new-question").value;
+        const response = document.getElementById("new-response").value;
+
+        fetch("add-response.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question: question, response: response })
+        })
+        .then(() => {
+            closeForm();
+            alert("Réponse ajoutée avec succès !");
+        })
+        .catch(error => console.error("Erreur :", error));
+    }
+
+    window.closeForm = function() {
+        document.getElementById("new-response-form").style.display = "none";
+    }
+    /* mettre la fin de commentaire ici */
+
+    function clearMessages() {
+        chatbotMessages.innerHTML = "";
+    }
+
+    function stopSpeech() {
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+    }
+
+    function speak(text, pitch = 1, rate = 1, volume = 1) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'fr-FR'; // Réglage de la langue à français
+        utterance.pitch = pitch; // Ton (entre 0 et 2)
+        utterance.rate = rate;   // Vitesse (entre 0.1 et 10)
+        utterance.volume = volume; // Volume (entre 0 et 1)
+        speechSynthesis.speak(utterance);
+    }
+
+    terminalForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        if (terminalInput.value.trim() !== "") {
+            const command = terminalInput.value.trim();
+            // Ajouter la commande à l'historique
+            commandHistory.push(command);
+            historyIndex = -1; // Réinitialiser l'index de l'historique
+            if (command.toLowerCase() === 'clear') {
+                terminalOutput.innerHTML = "";
+                terminalInput.value = "";
+            } else {
+                fetch('term.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `command=${encodeURIComponent(command)}`
+                })
+                .then(response => response.text())
+                .then(data => {
+                    terminalOutput.innerHTML += `<div>${data}</div>`;
+                    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                    terminalInput.value = "";
+                })
+                .catch(error => console.error('Erreur :', error));
+            }
+        }
+    });
+
+    terminalInput.addEventListener('keydown', function(event) {
+        if (event.key === "ArrowUp") {
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                terminalInput.value = commandHistory[commandHistory.length - 1 - historyIndex];
+            }
+        } else if (event.key === "ArrowDown") {
+            if (historyIndex > 0) {
+                historyIndex--;
+                terminalInput.value = commandHistory[commandHistory.length - 1 - historyIndex];
+            } else {
+                historyIndex = -1;
+                terminalInput.value = "";
+            }
+        }
+    });
+
+    function displayCurrentTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        appendMessage('bot', `Il est ${timeString}.`);
+        speak(`Il est ${timeString}.`);
+    }
+
+    function displayCurrentDate() {
+        const now = new Date();
+        const dateString = now.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        appendMessage('bot', `Aujourd'hui, nous sommes le ${dateString}.`);
+        speak(`Aujourd'hui, nous sommes le ${dateString}.`);
+    }
+});
+</script>
+
+</body>
+</html>
